@@ -1,7 +1,9 @@
 package com.iispl.streamservice;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.iispl.dao.ChequeDao;
 import com.iispl.model.Cheque;
@@ -32,8 +34,12 @@ public class AdvancedStreamService {
 
     // 15. Multi-Level Comparator
     public List<Cheque> getMultiLevelOrderedCheques(){
-		return null;
+    	Comparator<Cheque> comparator=Comparator.comparing(Cheque::getBranchCode)
+    			.thenComparing(Cheque::getAmount).reversed()
+    			.thenComparing(Cheque::getChequeNumber);
     	
-    }
+		return chequeDao.getAllCheques().stream().sorted(comparator).collect(Collectors.toList());
+    	
+ }
 
 }
