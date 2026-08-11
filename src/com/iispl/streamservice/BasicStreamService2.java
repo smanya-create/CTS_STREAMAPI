@@ -1,5 +1,6 @@
 package com.iispl.streamservice;
 
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.OptionalDouble;
 
@@ -15,24 +16,28 @@ public class BasicStreamService2 {
     
     // 4. CTS Record Count
     public long getChequeCount() {
-		return 0;
+		return chequeDao.getAllCheques().stream()
+				.count();
     	
     }
 
     // 5. Amount Extremes
     public Optional<Cheque> getHighestCheque(){
-		return null;
+		return chequeDao.getAllCheques().stream()
+				.max(Comparator.comparingDouble(Cheque::getAmount));
     	
     }
 
     public Optional<Cheque> getLowestCheque(){
-		return null;
+		return chequeDao.getAllCheques().stream()
+				.min(Comparator.comparingDouble(Cheque::getAmount));
     	
     }
 
     // 6. Average Cheque Amount
     public OptionalDouble getAverageAmount() {
-		return null;
+		return chequeDao.getAllCheques().stream()
+				.mapToDouble(Cheque::getAmount).average();
     	
     }
 
