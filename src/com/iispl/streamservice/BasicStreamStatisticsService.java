@@ -7,10 +7,10 @@ import java.util.OptionalDouble;
 import com.iispl.dao.ChequeDao;
 import com.iispl.model.Cheque;
 
-public class BasicStreamService2 {
+public class BasicStreamStatisticsService {
 	private ChequeDao chequeDao;
 
-    public BasicStreamService2(ChequeDao chequeDAO) {
+    public BasicStreamStatisticsService(ChequeDao chequeDAO) {
         this.chequeDao = chequeDAO;
     }
     
