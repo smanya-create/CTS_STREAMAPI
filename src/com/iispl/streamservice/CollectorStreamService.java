@@ -1,9 +1,12 @@
 package com.iispl.streamservice;
 
 import java.util.DoubleSummaryStatistics;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.iispl.dao.ChequeDao;
+import com.iispl.enums.ValidationStatus;
 import com.iispl.model.Cheque;
 
 
@@ -25,13 +28,26 @@ public class CollectorStreamService {
     
  // 7. Cheque Lookup Structure
     public Map<String, Cheque> getChequeLookup(){
-		return null;
+    	List<Cheque> list = chequeDao.getAllCheques();
+    	
+    	Map<String,Cheque> cheques = list.stream()
+    			.collect(Collectors.toMap(Cheque::getChequeNumber,
+    					cheque->cheque,
+    					(oldCheque,newCheque)->oldCheque));
+    	
+		return cheques;
     	
     }
 
     // 8. CTS Reference String
     public String getApprovedChequeReferences() {
-		return null;
+    	List<Cheque> list = chequeDao.getAllCheques();
+    	
+    	String result = list.stream()
+    			.filter(cheque->cheque.getValidationStatus()==ValidationStatus.APPROVED)
+    			.map(Cheque::getChequeNumber)
+    			.collect(Collectors.joining(","));
+		return result;
     	
     }
 
