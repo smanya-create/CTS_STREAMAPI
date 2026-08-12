@@ -53,5 +53,11 @@ public class AdvancedStreamService {
 		return chequeDao.getAllCheques().stream().sorted(comparator).collect(Collectors.toList());
 
 	}
+	
+	public Map<String, Double> getTotalAmountByBranch(){
+		
+		return chequeDao.getAllCheques().stream().collect(Collectors.groupingBy(Cheque::getBranchCode,Collectors.summingDouble(Cheque::getAmount)));
+		
+	}
 
 }

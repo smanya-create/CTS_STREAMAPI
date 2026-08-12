@@ -45,6 +45,7 @@ public class ChequeProcessingApplication {
 			System.out.println("13. Finalized Collection");
 			System.out.println("14. Pipeline Diagnostics");
 			System.out.println("15. Multi-Level Comparator");
+			System.out.println("16.Total Amount By Branch");
 			System.out.println("0. Exit");
 
 			System.out.println("Enter choice: ");
@@ -227,6 +228,14 @@ public class ChequeProcessingApplication {
 				for (Cheque c : orderedCheques) {
 					System.out.printf("%s | %s | %.2f%n", c.getBranchCode(), c.getChequeNumber(), c.getAmount());
 				}
+				break;
+			case 16:
+				System.out.println("====TOTAL AMOUNT BY BRANCH====");
+				Map<String,Double> amountByBranch = advancedService.getTotalAmountByBranch();
+				amountByBranch.forEach((branch, total) -> {
+
+					System.out.println(branch + " -> " + total);
+				});
 				break;
 			case 0:
 				System.out.println("Exiting application...");
