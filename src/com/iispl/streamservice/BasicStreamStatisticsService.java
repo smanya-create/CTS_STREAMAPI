@@ -14,14 +14,14 @@ public class BasicStreamStatisticsService {
         this.chequeDao = chequeDAO;
     }
     
-    // 4. CTS Record Count
+    // counts the total number of cheques
     public long getChequeCount() {
 		return chequeDao.getAllCheques().stream()
 				.count();
     	
     }
 
-    // 5. Amount Extremes
+    // gets the highesht and lowest cheque amounts
     public Optional<Cheque> getHighestCheque(){
 		return chequeDao.getAllCheques().stream()
 				.max(Comparator.comparingDouble(Cheque::getAmount));
@@ -34,7 +34,7 @@ public class BasicStreamStatisticsService {
     	
     }
 
-    // 6. Average Cheque Amount
+    // gets average checkamount
     public OptionalDouble getAverageAmount() {
 		return chequeDao.getAllCheques().stream()
 				.mapToDouble(Cheque::getAmount).average();

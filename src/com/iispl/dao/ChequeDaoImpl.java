@@ -1,4 +1,5 @@
 package com.iispl.dao;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,145 +14,114 @@ import com.iispl.model.Cheque;
 import com.iispl.util.DBUtil;
 
 public class ChequeDaoImpl implements ChequeDao {
+//method to get all cheques from the database
+	@Override
+	public List<Cheque> getAllCheques() {
 
-    @Override
-    public List<Cheque> getAllCheques() {
+		List<Cheque> cheques = new ArrayList<>();
+		String sql = "SELECT * FROM cts_cheque";
+		try (Connection con = DBUtil.getConnection();
+				PreparedStatement ps = con.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
+			while (rs.next()) {
+				Cheque cheque = mapCheque(rs);
+				cheques.add(cheque);
+			}
 
-        List<Cheque> cheques = new ArrayList<>();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-        String sql = "SELECT * FROM cts_cheque";
+		return cheques;
+	}
 
-        try (Connection con = DBUtil.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+	@Override
+	public List<Cheque> getChequesByBatch(int batchId) {
 
-            while (rs.next()) {
+		List<Cheque> cheques = new ArrayList<>();
 
-                Cheque cheque = mapCheque(rs);
+		String sql = "SELECT * FROM cts_cheque WHERE batch_id = ?";
 
-                cheques.add(cheque);
-            }
+		try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+			ps.setInt(1, batchId);
 
-        return cheques;
-    }
+			ResultSet rs = ps.executeQuery();
 
-    @Override
-    public List<Cheque> getChequesByBatch(int batchId) {
+			while (rs.next()) {
+				cheques.add(mapCheque(rs));
+			}
 
-        List<Cheque> cheques = new ArrayList<>();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-        String sql =
-                "SELECT * FROM cts_cheque WHERE batch_id = ?";
+		return cheques;
+	}
 
-        try (Connection con = DBUtil.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+	@Override
+	public Cheque getChequeByNumber(String chequeNumber) {
 
-            ps.setInt(1, batchId);
+		String sql = "SELECT * FROM cts_cheque WHERE cheque_number = ?";
 
-            ResultSet rs = ps.executeQuery();
+		try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
-            while (rs.next()) {
-                cheques.add(mapCheque(rs));
-            }
+			ps.setString(1, chequeNumber);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+			ResultSet rs = ps.executeQuery();
 
-        return cheques;
-    }
+			if (rs.next()) {
+				return mapCheque(rs);
+			}
 
-    @Override
-    public Cheque getChequeByNumber(String chequeNumber) {
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-        String sql =
-                "SELECT * FROM cts_cheque WHERE cheque_number = ?";
+		return null;
+	}
 
-        try (Connection con = DBUtil.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+	@Override
+	public void updateMicrStatus(String chequeNumber, MicrStatus status) {
 
-            ps.setString(1, chequeNumber);
+		String sql = "UPDATE cts_cheque " + "SET micr_status = ? " + "WHERE cheque_number = ?";
 
-            ResultSet rs = ps.executeQuery();
+		try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
-            if (rs.next()) {
-                return mapCheque(rs);
-            }
+			ps.setString(1, status.name());
+			ps.setString(2, chequeNumber);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+			ps.executeUpdate();
 
-        return null;
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-    @Override
-    public void updateMicrStatus(
-            String chequeNumber,
-            MicrStatus status) {
+	@Override
+	public void updateValidationStatus(String chequeNumber, ValidationStatus status) {
 
-        String sql =
-                "UPDATE cts_cheque " +
-                "SET micr_status = ? " +
-                "WHERE cheque_number = ?";
+		String sql = "UPDATE cts_cheque " + "SET validation_status = ? " + "WHERE cheque_number = ?";
 
-        try (Connection con = DBUtil.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+		try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setString(1, status.name());
-            ps.setString(2, chequeNumber);
+			ps.setString(1, status.name());
+			ps.setString(2, chequeNumber);
 
-            ps.executeUpdate();
+			ps.executeUpdate();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-    @Override
-    public void updateValidationStatus(
-            String chequeNumber,
-            ValidationStatus status) {
+	private Cheque mapCheque(ResultSet rs) throws Exception {
 
-        String sql =
-                "UPDATE cts_cheque " +
-                "SET validation_status = ? " +
-                "WHERE cheque_number = ?";
-
-        try (Connection con = DBUtil.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setString(1, status.name());
-            ps.setString(2, chequeNumber);
-
-            ps.executeUpdate();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private Cheque mapCheque(ResultSet rs) throws Exception {
-
-    	return new Cheque(
-    	        rs.getInt("cheque_id"),
-    	        rs.getString("cheque_number"),
-    	        rs.getString("account_number"),
-    	        rs.getString("customer_name"),
-    	        rs.getString("branch_code"),
-    	        rs.getString("micr_code"),
-    	        rs.getDouble("amount"),
-    	        rs.getDouble("available_balance"),
-    	        rs.getDate("cheque_date").toLocalDate(),
-    	        AccountStatus.valueOf(rs.getString("account_status")),
-    	        ChequeType.valueOf(rs.getString("cheque_type")),
-    	        MicrStatus.valueOf(rs.getString("micr_status")),
-    	        ValidationStatus.valueOf(rs.getString("validation_status")),
-    	        rs.getInt("batch_id")
-    	    );
-    }
+		return new Cheque(rs.getInt("cheque_id"), rs.getString("cheque_number"), rs.getString("account_number"),
+				rs.getString("customer_name"), rs.getString("branch_code"), rs.getString("micr_code"),
+				rs.getDouble("amount"), rs.getDouble("available_balance"), rs.getDate("cheque_date").toLocalDate(),
+				AccountStatus.valueOf(rs.getString("account_status")), ChequeType.valueOf(rs.getString("cheque_type")),
+				MicrStatus.valueOf(rs.getString("micr_status")),
+				ValidationStatus.valueOf(rs.getString("validation_status")), rs.getInt("batch_id"));
+	}
 }

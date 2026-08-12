@@ -16,7 +16,7 @@ public class AdvancedStreamService {
 		this.chequeDao = chequeDAO;
 	}
 
-	// 12. Branch -> Cheque Numbers
+	//  Branch -> Cheque Numbers
 	public Map<String, List<String>> getChequeNumbersByBranch() {
 		List<Cheque> cheques = chequeDao.getAllCheques();
 
@@ -25,7 +25,7 @@ public class AdvancedStreamService {
 
 	}
 
-	// 13. Finalized Collection
+	// makes the list unmodifiable
 	public List<Cheque> getFinalizedChequeCollection() {
 
 		List<Cheque> cheques = chequeDao.getAllCheques();
@@ -34,7 +34,7 @@ public class AdvancedStreamService {
 				.collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
 	}
 
-	// 14. Pipeline Diagnostics
+	// peek used for debugging
 	public List<Cheque> getChequeTrace() {
 
 		List<Cheque> cheques = chequeDao.getAllCheques();
@@ -45,7 +45,7 @@ public class AdvancedStreamService {
 
 	}
 
-	// 15. Multi-Level Comparator
+	// comparingthen to check multiple conditions
 	public List<Cheque> getMultiLevelOrderedCheques() {
 		Comparator<Cheque> comparator = Comparator.comparing(Cheque::getBranchCode).thenComparing(Cheque::getAmount)
 				.reversed().thenComparing(Cheque::getChequeNumber);

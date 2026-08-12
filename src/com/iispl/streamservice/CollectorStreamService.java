@@ -9,16 +9,6 @@ import com.iispl.dao.ChequeDao;
 import com.iispl.enums.ValidationStatus;
 import com.iispl.model.Cheque;
 
-
-//Collectors.toMap()
-//Collectors.joining()
-//Collectors.counting()
-//Collectors.summingDouble()
-//Collectors.averagingDouble()
-//Collectors.summarizingDouble()
-//groupingBy()
-
-
 public class CollectorStreamService {
 	private ChequeDao chequeDao;
 
@@ -26,7 +16,7 @@ public class CollectorStreamService {
         this.chequeDao = chequeDAO;
     }
     
- // 7. Cheque Lookup Structure
+ // gets chequenumber->cheque 
     public Map<String, Cheque> getChequeLookup(){
     	List<Cheque> list = chequeDao.getAllCheques();
     	
@@ -39,7 +29,7 @@ public class CollectorStreamService {
     	
     }
 
-    // 8. CTS Reference String
+    // gets only the approved cheques
     public String getApprovedChequeReferences() {
     	List<Cheque> list = chequeDao.getAllCheques();
     	
@@ -51,7 +41,7 @@ public class CollectorStreamService {
     	
     }
 
-    // 9. Branch Record Count
+    // BranchCode->>>count
     public Map<String, Long> getChequeCountByBranch(){
     	List<Cheque> list = chequeDao.getAllCheques();
     	Map<String, Long> result = list.stream()

@@ -14,23 +14,23 @@ public class BasicStreamService {
 		this.chequeDao = chequeDAO;
 	}
 
-	// 1. Unique CTS Values
+	// gets unique branch code
 	public List<String> getUniqueBranches() {
 		return chequeDao.getAllCheques().stream().map(Cheque::getBranchCode).distinct().collect(Collectors.toList());
 
 	}
-
+//gets unique micr codes
 	public List<String> getUniqueMicrCodes() {
 		return chequeDao.getAllCheques().stream().map(Cheque::getMicrCode).distinct().collect(Collectors.toList());
 	}
 
-	// 2. Top Five Processing Records
+//gets top five records after sorting in descending order
 	public List<Cheque> getTopFive() {
 		return chequeDao.getAllCheques().stream().sorted(Comparator.comparing(Cheque::getAmount).reversed()).limit(5)
 				.collect(Collectors.toList());
 	}
 
-	// 3. Cheque Pagination
+//cheque pagination using skip and limit
 	public List<Cheque> getPage(int pageNumber, int pageSize) {
 		return chequeDao.getAllCheques().stream().skip((pageNumber - 1) * pageSize).limit(pageSize).collect(Collectors.toList());
 	}

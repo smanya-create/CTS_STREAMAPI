@@ -62,19 +62,17 @@ public class ChequeProcessingApplication {
 				System.out.println("==TOP FIVE PROCESSING QUEUES==");
 				List<Cheque> topFive = basicService.getTopFive();
 				int rank = 1;
-
 				for (Cheque cheque : topFive) {
 
 					System.out.printf("%d. %s | %s | %.2f%n", rank++, cheque.getChequeNumber(), cheque.getBranchCode(),
 							cheque.getAmount());
 				}
-
 				break;
 			case 3:
 				System.out.println("Enter page number=");
-				int pageNumber = +scanner.nextInt();
+				int pageNumber = scanner.nextInt();
 				System.out.println("Enter page size=");
-				int pageSize = +scanner.nextInt();
+				int pageSize = scanner.nextInt();
 
 				List<Cheque> page = basicService.getPage(pageNumber, pageSize);
 
@@ -101,16 +99,12 @@ public class ChequeProcessingApplication {
 				Optional<Cheque> lowest = basicStatisticsService.getLowestCheque();
 
 				if (highest.isPresent()) {
-
 					Cheque cheque = highest.get();
-
 					System.out.printf("Highest : %s | %.2f%n", cheque.getChequeNumber(), cheque.getAmount());
 				}
 
 				if (lowest.isPresent()) {
-
 					Cheque cheque = lowest.get();
-
 					System.out.printf("Lowest : %s | %.2f%n", cheque.getChequeNumber(), cheque.getAmount());
 				}
 
@@ -134,21 +128,16 @@ public class ChequeProcessingApplication {
 			case 7:
 
 				System.out.println("===== CHEQUE LOOKUP =====");
-
 				Map<String, Cheque> chequeMap = collectorService.getChequeLookup();
-
-				Cheque cheque = chequeMap.get("CHQ1005");
-
+				chequeMap.forEach((chequeNumber, cheque) -> {
 				if (cheque != null) {
-
 					System.out.println("Key : " + cheque.getChequeNumber());
-
 					System.out.println("Customer : " + cheque.getCustomerName());
-
 					System.out.printf("Amount : %.2f%n", cheque.getAmount());
-
 					System.out.println("Branch : " + cheque.getBranchCode());
 				}
+				}
+			);
 
 				break;
 			case 8:
@@ -177,13 +166,9 @@ public class ChequeProcessingApplication {
 				System.out.println("===== BRANCH AMOUNT SUMMARY =====");
 
 				Map<String, Double> totalByBranch = collectorService.getBranchTotalAmounts();
-
 				Map<String, Double> averageByBranch = collectorService.getBranchAverageAmounts();
-
 				totalByBranch.forEach((branch, total) -> {
-
 					double avg = averageByBranch.get(branch);
-
 					System.out.printf("%s | Total: %.2f | Average: %.2f%n", branch, total, avg);
 				});
 
@@ -216,54 +201,34 @@ public class ChequeProcessingApplication {
 
 				break;
 			case 13:
-
 				System.out.println("===== FINALIZED CTS RESULT =====");
-
 				List<Cheque> finalized = advancedService.getFinalizedChequeCollection();
-
 				System.out.println("Records Collected : " + finalized.size());
-
 				try {
-
 					finalized.add(null);
-
 				} catch (UnsupportedOperationException e) {
-
 					System.out.println("Modification Test : " + "UnsupportedOperationException");
-
 					System.out.println("Result : Collection remains unchanged");
 				}
-
 				break;
 			case 14:
 
 				System.out.println("===== STREAM TRACE =====");
-
 				advancedService.getChequeTrace();
-
 				System.out.println("Final result produced successfully.");
 
 				break;
 			case 15:
-
 				System.out.println("===== MULTI-LEVEL ORDER =====");
-
 				List<Cheque> orderedCheques = advancedService.getMultiLevelOrderedCheques();
-
 				for (Cheque c : orderedCheques) {
-
 					System.out.printf("%s | %s | %.2f%n", c.getBranchCode(), c.getChequeNumber(), c.getAmount());
 				}
-
 				break;
 			case 0:
-
 				System.out.println("Exiting application...");
-
 				break;
-
 			default:
-
 				System.out.println("Invalid choice. Please try again.");
 			}
 
