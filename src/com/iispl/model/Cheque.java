@@ -124,6 +124,14 @@ public class Cheque {
 	public void setBatchId(int batchId) {
 		this.batchId = batchId;
 	}
+	@Override
+	public String toString() {
+		return "Cheque [chequeId=" + chequeId + ", chequeNumber=" + chequeNumber + ", accountNumber=" + accountNumber
+				+ ", customerName=" + customerName + ", branchCode=" + branchCode + ", micrCode=" + micrCode
+				+ ", amount=" + amount + ", availableBalance=" + availableBalance + ", chequeDate=" + chequeDate
+				+ ", accountStatus=" + accountStatus + ", chequeType=" + chequeType + ", micrStatus=" + micrStatus
+				+ ", validationStatus=" + validationStatus + ", batchId=" + batchId + "]";
+	}
 	
 	
 

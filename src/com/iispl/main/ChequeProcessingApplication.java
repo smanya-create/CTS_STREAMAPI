@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 import com.iispl.dao.ChequeDao;
 import com.iispl.dao.ChequeDaoImpl;
+import com.iispl.enums.ChequeType;
 import com.iispl.model.Cheque;
 import com.iispl.streamservice.AdvancedStreamService;
 import com.iispl.streamservice.BasicStreamService;
@@ -46,6 +47,7 @@ public class ChequeProcessingApplication {
 			System.out.println("14. Pipeline Diagnostics");
 			System.out.println("15. Multi-Level Comparator");
 			System.out.println("16.Total Amount By Branch");
+			System.out.println("17.Partition the type of cheques");
 			System.out.println("0. Exit");
 
 			System.out.println("Enter choice: ");
@@ -237,6 +239,13 @@ public class ChequeProcessingApplication {
 					System.out.println(branch + " -> " + total);
 				});
 				break;
+			case 17:System.out.println("====PARTITION CHEQUES====");
+			Map<ChequeType, List<Cheque>> chequePartition=advancedService.partitionHighValueCheques();
+			chequePartition.forEach((type, chequeList) -> {
+				System.out.println("\n"+type);
+				chequeList.forEach(System.out::println);
+			});
+			break;
 			case 0:
 				System.out.println("Exiting application...");
 				break;

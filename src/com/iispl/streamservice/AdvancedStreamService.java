@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.iispl.dao.ChequeDao;
+import com.iispl.enums.ChequeType;
 import com.iispl.model.Cheque;
 
 public class AdvancedStreamService {
@@ -57,6 +58,11 @@ public class AdvancedStreamService {
 	public Map<String, Double> getTotalAmountByBranch(){
 		
 		return chequeDao.getAllCheques().stream().collect(Collectors.groupingBy(Cheque::getBranchCode,Collectors.summingDouble(Cheque::getAmount)));
+		
+	}
+	public Map<ChequeType, List<Cheque>> partitionHighValueCheques() {
+		return chequeDao.getAllCheques().stream().collect(Collectors.groupingBy(cheque->
+		cheque.getAmount()>=500000?ChequeType.HIGH_VALUE:ChequeType.NORMAL));
 		
 	}
 
