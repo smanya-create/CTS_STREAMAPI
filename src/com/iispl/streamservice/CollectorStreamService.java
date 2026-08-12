@@ -53,24 +53,38 @@ public class CollectorStreamService {
 
     // 9. Branch Record Count
     public Map<String, Long> getChequeCountByBranch(){
-		return null;
+    	List<Cheque> list = chequeDao.getAllCheques();
+    	Map<String, Long> result = list.stream()
+    			.collect(Collectors.groupingBy(Cheque::getBranchCode,
+    					Collectors.counting()));   	
+		return result;
     	
     }
 
     // 10. Branch Amount Summary
     public Map<String, Double> getBranchTotalAmounts(){
-		return null;
+    	List<Cheque> list = chequeDao.getAllCheques();
+    	Map<String, Double> result= list.stream()
+    			.collect(Collectors.groupingBy(Cheque::getBranchCode,
+    					Collectors.summingDouble(Cheque::getAmount))); 
+		return result;
     	
     }
 
     public Map<String, Double> getBranchAverageAmounts(){
-		return null;
-    	
+    	List<Cheque> list = chequeDao.getAllCheques();
+    	Map<String, Double> result= list.stream()
+    			.collect(Collectors.groupingBy(Cheque::getBranchCode,
+    					Collectors.averagingDouble(Cheque::getAmount))); 
+		return result;    	
     }
 
     // 11. Branch Statistical Summary
     public Map<String, DoubleSummaryStatistics> getBranchStatistics(){
-		return null;
-    	
+    	List<Cheque> list = chequeDao.getAllCheques();
+    	Map<String, DoubleSummaryStatistics> result= list.stream()
+    			.collect(Collectors.groupingBy(Cheque::getBranchCode,
+    					Collectors.summarizingDouble(Cheque::getAmount))); 
+		return result;    	    	
     }
 }
