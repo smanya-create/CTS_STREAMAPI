@@ -40,7 +40,7 @@ public class AdvancedStreamService {
 		List<Cheque> cheques = chequeDao.getAllCheques();
 
 		return cheques.stream()
-				.peek(c -> System.out.print(" TRACE " + c.getChequeNumber() + "Entered into the pipeline"))
+				.peek(c -> System.out.print(" TRACE " + c.getChequeNumber() + " Entered into the pipeline\n"))
 				.collect(Collectors.toList());
 
 	}
