@@ -131,10 +131,13 @@ public class ChequeProcessingApplication {
 				Map<String, Cheque> chequeMap = collectorService.getChequeLookup();
 				chequeMap.forEach((chequeNumber, cheque) -> {
 				if (cheque != null) {
-					System.out.println("Key : " + cheque.getChequeNumber());
-					System.out.println("Customer : " + cheque.getCustomerName());
-					System.out.printf("Amount : %.2f%n", cheque.getAmount());
-					System.out.println("Branch : " + cheque.getBranchCode());
+					System.out.printf(
+					        "Key : %s | Customer : %s | Amount : %.2f | Branch : %s%n",
+					        chequeNumber,
+					        cheque.getCustomerName(),
+					        cheque.getAmount(),
+					        cheque.getBranchCode()
+					    );
 				}
 				}
 			);
